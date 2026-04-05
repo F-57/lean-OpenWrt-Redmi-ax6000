@@ -28,10 +28,9 @@ items=(
     "luci-app-vsftpd"
     "luci-app-wol"
 )
-
 for item in "${items[@]}"; do
     # 将 CONFIG_PACKAGE_luci-app-xxx=y 替换为未设置状态
     sed -i "s/CONFIG_PACKAGE_$item=y/# CONFIG_PACKAGE_$item is not set/g" .config
 done
 
-
+echo "CONFIG_PACKAGE_luci-theme-design=y" >> .config
