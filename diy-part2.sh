@@ -22,12 +22,11 @@ sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' target/linux/
 
 # --- 取消集成指定的 LuCI 插件 ---
 items=(
-    "luci-app-vsftpd"
-    "luci-app-uhttpd"
-    "luci-app-wol"
     "luci-app-accesscontrol"
+    "luci-app-ddns"
     "luci-app-vlmcsd"
-    "luci-app-arpbind"
+    "luci-app-vsftpd"
+    "luci-app-wol"
 )
 
 for item in "${items[@]}"; do
