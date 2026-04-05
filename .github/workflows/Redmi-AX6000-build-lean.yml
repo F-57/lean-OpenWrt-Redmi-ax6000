@@ -14,8 +14,11 @@ name: Redmi-AX6000-build-lean
 on:
   repository_dispatch:
   workflow_dispatch:
-  schedule:
-    - cron: 0 16 * * *
+    inputs:
+      ssh:
+        description: '是否开启 SSH 调试 (true/false)'
+        required: false
+        default: 'false'
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede.git
@@ -27,7 +30,7 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   UPLOAD_PACKAGES: true
-  TZ: Europe/Paris
+  TZ: Asia/Shanghai
   
 jobs:
   build:
