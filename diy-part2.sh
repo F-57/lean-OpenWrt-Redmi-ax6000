@@ -20,8 +20,19 @@ sed -i 's/192.168.\$((addr_offset++))/10.0.\$((addr_offset++))/g' package/base-f
 # 512布局
 sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' target/linux/mediatek/dts/mt7986a-xiaomi-redmi-router-ax6000.dts
 
-#sed -i 's/zh_cn/auto/g' feeds/luci/modules/luci-base/root/etc/uci-defaults/luci-base 
-#sed -i '/AUTOLOAD:=$(call AutoProbe,mt7915e)/a \  MODPARAMS.mt7915e:=wed_enable=Y' package/kernel/mt76/Makefile
-#cp $GITHUB_WORKSPACE/lean/Redmi-AX6000/data/ddns.config feeds/packages/net/ddns-scripts/files/
-#chmod 0755 package/base-files/files/etc/init.d/mtd-rw
-#sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=6.1/g' target/linux/mediatek/Makefile
+# --- 取消集成指定的 LuCI 插件 ---
+items=(
+    "luci-app-vsftpd"
+    "luci-app-uhttpd"
+    "luci-app-wol"
+    "luci-app-accesscontrol"
+    "luci-app-vlmcsd"
+    "luci-app-arpbind"
+)
+
+for item in "${items[@]}"; do
+    # 将 CONFIG_PACKAGE_luci-app-xxx=y 替换为未设置状态
+    sed -i "s/CONFIG_PACKAGE_$item=y/# CONFIG_PACKAGE_$item is not set/g" .config
+done
+
+
