@@ -20,6 +20,10 @@ sed -i 's/192.168.\$((addr_offset++))/10.0.\$((addr_offset++))/g' package/base-f
 # 512布局
 sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' target/linux/mediatek/dts/mt7986a-xiaomi-redmi-router-ax6000.dts
 
+# 改菜单名字
+echo -e "\nmsgid \"TurboACC settings\"" >> feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po
+echo -e "msgstr \"网络加速\"" >> feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po
+
 # 删除软件
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/applications/luci-app-vlmcsd
