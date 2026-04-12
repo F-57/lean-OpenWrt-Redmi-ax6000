@@ -31,6 +31,7 @@ rm -rf feeds/luci/applications/luci-app-accesscontrol
 rm -rf feeds/luci/applications/luci-app-nlbwmon
 rm -rf feeds/luci/applications/luci-app-wol
 rm -rf feeds/luci/applications/luci-app-ddns
+rm -rf feeds/luci/applications/luci-app-arpbind
 rm -rf package/lean/ddns-scripts_aliyun
 rm -rf package/lean/ddns-scripts_dnspod
 
