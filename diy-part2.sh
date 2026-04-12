@@ -37,7 +37,9 @@ sed -i '/msgid "TurboACC"/{n;s/msgstr ".*"/msgstr "网络加速"/}' feeds/luci/a
 
 # 下载软件包
 git clone https://github.com/sirpdboy/luci-app-wizard package/luci-app-wizard
-
+rm -rf feeds/luci/applications/luci-app-adguardhome
+git clone https://github.com/F-57/luci-app-adguardhome package/luci-app-adguardhome
 
 echo "CONFIG_PACKAGE_luci-theme-argon=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-wizard=y" >> .config
+echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> .config
