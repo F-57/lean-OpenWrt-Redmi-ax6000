@@ -40,18 +40,6 @@ git clone https://github.com/sirpdboy/luci-app-wizard package/luci-app-wizard
 rm -rf feeds/luci/applications/luci-app-adguardhome
 git clone https://github.com/F-57/luci-app-adguardhome package/luci-app-adguardhome
 
-# 切换防火墙版本
-sed -i 's/CONFIG_DEFAULT_firewall=y/# CONFIG_DEFAULT_firewall is not set/g' .config
-sed -i 's/CONFIG_DEFAULT_iptables=y/# CONFIG_DEFAULT_iptables is not set/g' .config
-sed -i 's/CONFIG_DEFAULT_ip6tables=y/# CONFIG_DEFAULT_ip6tables is not set/g' .config
-sed -i 's/CONFIG_DEFAULT_ipset=y/# CONFIG_DEFAULT_ipset is not set/g' .config
-# 强制开启 Firewall4 及其依赖
-echo "CONFIG_PACKAGE_firewall4=y" >> .config
-echo "CONFIG_PACKAGE_nftables-json=y" >> .config
-echo "CONFIG_PACKAGE_kmod-nft-core=y" >> .config
-echo "CONFIG_PACKAGE_kmod-nft-offload=y" >> .config
-
 # 集成软件
-echo "CONFIG_PACKAGE_luci-theme-argon=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-wizard=y" >> .config
 echo "CONFIG_PACKAGE_luci-app-adguardhome=y" >> .config
