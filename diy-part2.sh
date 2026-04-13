@@ -21,8 +21,15 @@ sed -i 's/192.168.\$((addr_offset++))/10.0.\$((addr_offset++))/g' package/base-f
 sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' target/linux/mediatek/dts/mt7986a-xiaomi-redmi-router-ax6000.dts
 
 # 切换防火墙版本
-sed -i 's/CONFIG_PACKAGE_firewall=y/# CONFIG_PACKAGE_firewall is not set/g' .config
+sed -i 's/CONFIG_DEFAULT_firewall=y/# CONFIG_DEFAULT_firewall is not set/g' .config
+sed -i 's/CONFIG_DEFAULT_iptables=y/# CONFIG_DEFAULT_iptables is not set/g' .config
+sed -i 's/CONFIG_DEFAULT_ip6tables=y/# CONFIG_DEFAULT_ip6tables is not set/g' .config
+sed -i 's/CONFIG_DEFAULT_ipset=y/# CONFIG_DEFAULT_ipset is not set/g' .config
+# 强制开启 Firewall4 及其依赖
 echo "CONFIG_PACKAGE_firewall4=y" >> .config
+echo "CONFIG_PACKAGE_nftables-json=y" >> .config
+echo "CONFIG_PACKAGE_kmod-nft-core=y" >> .config
+echo "CONFIG_PACKAGE_kmod-nft-offload=y" >> .config
 
 # 删除软件
 rm -rf feeds/luci/applications/luci-app-openclash
