@@ -23,7 +23,7 @@ sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' target/linux/
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
 # 修改upnp服务地址
-sed -i "s/192\.168\.[0-9]*\.[0-9]*/10.0.0.1/g" feeds/luci/applications/applications/luci-app-upnp/htdocs/luci-static/resources/view/upnp/upnp.js
+sed -i "s/192\.168\.[0-9]*\.[0-9]*/10.0.0.1/g" feeds/luci/applications/luci-app-upnp/htdocs/luci-static/resources/view/upnp/upnp.js
 
 # 删除预制软件
 rm -rf feeds/luci/applications/luci-app-vlmcsd
@@ -44,10 +44,11 @@ rm -rf feeds/luci/applications/luci-app-mosdns
 rm -rf feeds/packages/lang/golang
 
 # 下载软件包
+git clone --depth=1 https://github.com/sirpdboy/luci-theme-kucat package/luci-theme-kucat
+git clone --depth=1 https://github.com/sirpdboy/luci-app-kucat-config package/luci-app-kucat-config
 git clone --depth=1 https://github.com/F-57/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth=1 https://github.com/sbwml/luci-app-airconnect package/luci-app-airconnect
 git clone --depth=1 https://github.com/sirpdboy/luci-app-lucky package/luci-app-lucky
-git clone --depth=1 https://github.com/derisamedia/luci-theme-alpha-reborn package/luci-theme-alpha-reborn
 git clone --depth=1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 git clone --depth=1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone --depth=1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
@@ -66,6 +67,7 @@ change_name() {
     fi
 }
 
+change_name "package/luci-app-kucat-config/po/zh_Hans/kucat-config.po" "KuCat Config" "主题设置"
 change_name "package/mosdns/luci-app-mosdns/po/zh_Hans/mosdns.po" "MosDNS" "转发分流"
 change_name "feeds/luci/applications/luci-app-upnp/po/zh_Hans/upnp.po" "UPnP IGD & PCP" "端口转发"
 change_name "package/lucky/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky" "大吉大利"
@@ -73,7 +75,8 @@ change_name "feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po " 
 
 # 集成软件 预置编译选项 (写入 .config)
 cat >> .config <<EOF
-CONFIG_PACKAGE_luci-theme-alpha-reborn=y
+CONFIG_PACKAGE_luci-app-kucat-config=y
+CONFIG_PACKAGE_luci-theme-kucat=y
 CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_luci-app-lucky=y
