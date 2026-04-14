@@ -33,6 +33,7 @@ rm -rf feeds/luci/applications/luci-app-ddns
 rm -rf feeds/luci/applications/luci-app-arpbind
 rm -rf package/lean/ddns-scripts_aliyun
 rm -rf package/lean/ddns-scripts_dnspod
+rm -rf feeds/luci/applications/luci-app-turboacc
 
 # 下载软件包
 rm -rf feeds/luci/applications/luci-app-adguardhome
@@ -74,6 +75,5 @@ CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_luci-app-lucky=y
 CONFIG_PACKAGE_luci-app-airconnect=y
-CONFIG_PACKAGE_luci-app-openlist2=y
 EOF
 
