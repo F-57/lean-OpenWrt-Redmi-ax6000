@@ -36,7 +36,7 @@ rm -rf feeds/packages/lang/golang
 # 下载软件包
 git clone --depth=1 https://github.com/sirpdboy/luci-theme-kucat package/luci-theme-kucat
 git clone --depth=1 https://github.com/sirpdboy/luci-app-kucat-config package/luci-app-kucat-config
-git clone --depth=1 https://github.com/F-57/luci-app-adguardhome package/luci-app-adguardhome
+git clone --depth=1 https://github.com/F-57/luci-app-adguardhome package/adguardhome
 git clone --depth=1 https://github.com/sbwml/luci-app-airconnect package/luci-app-airconnect
 git clone --depth=1 https://github.com/sirpdboy/luci-app-lucky package/lucky
 git clone --depth=1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
