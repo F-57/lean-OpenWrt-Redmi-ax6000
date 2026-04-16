@@ -32,7 +32,7 @@ rm -rf feeds/luci/applications/luci-app-lucky
 rm -rf feeds/luci/applications/luci-app-mosdns
 rm -rf feeds/packages/net/v2ray-geodata
 rm -rf feeds/packages/net/mosdns
-rm -rf feeds/packages/lang/golang
+# rm -rf feeds/packages/lang/golang
 
 # Git稀疏克隆，只克隆指定目录到本地
 function git_sparse_clone() {
@@ -52,7 +52,7 @@ git_sparse_clone main https://github.com/sbwml/luci-app-airconnect airconnect
 git_sparse_clone main https://github.com/sbwml/luci-app-airconnect luci-app-airconnect
 git clone --depth=1 https://github.com/sirpdboy/luci-theme-kucat package/luci-theme-kucat
 git clone --depth=1 https://github.com/sirpdboy/luci-app-kucat-config package/luci-app-kucat-config
-git clone --depth=1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+# git clone --depth=1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 git clone --depth=1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone --depth=1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
