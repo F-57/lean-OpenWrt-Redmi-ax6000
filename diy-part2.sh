@@ -65,6 +65,7 @@ change_name() {
 
 change_name "package/luci-app-kucat-config/po/zh_Hans/kucat-config.po" "KuCat Config" "主题设置"
 change_name "feeds/luci/applications/luci-app-mosdns/po/zh_Hans/mosdns.po" "MosDNS" "转发分流"
+change_name "feeds/luci/applications/luci-app-nikki/po/zh_Hans/nikki.po" "Nikki" "科学上网"
 change_name "feeds/luci/applications/luci-app-upnp/po/zh_Hans/upnp.po" "UPnP" "端口转发"
 change_name "package/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky" "大吉大利"
 change_name "feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po" "TurboACC" "网络加速"
@@ -74,6 +75,7 @@ change_name "feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po" "
 
 # 集成软件 预置编译选项 (写入 .config)
 cat >> .config <<EOF
+CONFIG_PACKAGE_luci-app-nikki=y
 CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_luci-app-lucky=y
