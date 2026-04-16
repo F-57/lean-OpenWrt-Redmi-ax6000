@@ -43,14 +43,14 @@ function git_sparse_clone() {
   cd .. && rm -rf $repodir
 }
 
-
 # 下载软件包
 git_sparse_clone main https://github.com/sirpdboy/luci-app-lucky lucky
 git_sparse_clone main https://github.com/sirpdboy/luci-app-lucky luci-app-lucky
+git_sparse_clone main https://github.com/F-57/luci-app-adguardhome luci-app-adguardhome
+git_sparse_clone main https://github.com/sbwml/luci-app-airconnect airconnect
+git_sparse_clone main https://github.com/sbwml/luci-app-airconnect luci-app-airconnect
 git clone --depth=1 https://github.com/sirpdboy/luci-theme-kucat package/luci-theme-kucat
 git clone --depth=1 https://github.com/sirpdboy/luci-app-kucat-config package/luci-app-kucat-config
-git clone --depth=1 https://github.com/F-57/luci-app-adguardhome package/adguardhome
-git clone --depth=1 https://github.com/sbwml/luci-app-airconnect package/luci-app-airconnect
 git clone --depth=1 https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 git clone --depth=1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone --depth=1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
