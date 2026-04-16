@@ -75,6 +75,9 @@ change_name "feeds/luci/applications/luci-app-upnp/po/zh_Hans/upnp.po" "UPnP" "�
 change_name "package/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky" "大吉大利"
 change_name "feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po" "TurboACC" "网络加速"
 
+# 更改 Argon 主题背景
+#cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
+
 # 集成软件 预置编译选项 (写入 .config)
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-mosdns=y
