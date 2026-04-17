@@ -61,6 +61,8 @@ jobs:
         ccache: true
         toolchain: true
         skip: false
+        clean: false
+        working-directory: openwrt
         
     - name: 下载缓存 (dl)
       uses: actions/cache@v4
