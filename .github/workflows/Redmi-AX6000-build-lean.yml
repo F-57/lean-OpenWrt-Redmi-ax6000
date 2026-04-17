@@ -55,14 +55,14 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /mnt/workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: Toolchain Cache
+    - name: Toolchain & ccache 缓存
       uses: klever1988/cachewrtbuild@main
       with:
         ccache: true
-        toolchain: false
+        toolchain: true
         skip: false
         
-    - name: Cache dl
+    - name: 下载缓存 (dl)
       uses: actions/cache@v4
       with:
         path: openwrt/dl
@@ -90,23 +90,13 @@ jobs:
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
-        echo -e 'CONFIG_DEVEL=y\nCONFIG_CCACHE=y' >> .config
+        # 强制开启开发人员模式和 ccache
+        sed -i 's/# CONFIG_DEVEL is not set/CONFIG_DEVEL=y/' .config
+        echo "CONFIG_CCACHE=y" >> .config
 
     - name: SSH（可选）
       uses: P3TERX/ssh2actions@v1.0.0
       if: github.event.inputs.ssh_connection == 'true'
-
-    - name: Setup ccache
-      run: |
-        export CCACHE_DIR=/github/home/.ccache
-        export CCACHE_BASEDIR=$GITHUB_WORKSPACE
-        export CCACHE_NOHASHDIR=true
-        export CCACHE_COMPRESS=true
-        export CCACHE_MAXSIZE=5G
-        echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
-        echo "CC=ccache gcc" >> $GITHUB_ENV
-        echo "CXX=ccache g++" >> $GITHUB_ENV
-        ccache -z
 
     - name: 下载源码
       id: package
@@ -122,14 +112,15 @@ jobs:
       run: |
         cd openwrt
         echo -e "$(nproc) thread compile"
-        make -j$(nproc) || make -j1 || make -j1 V=s
+        # 针对 24.10 及其 Rust 依赖，建议分阶段编译以防崩溃
+        make tools/install -j$(nproc) || make tools/install -j1 V=s
+        make toolchain/install -j$(nproc) || make toolchain/install -j1 V=s
+        make -j$(nproc) || make -j1 V=s
         ccache -s
+        echo "status=success" >> $GITHUB_OUTPUT
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=$(cat DEVICE_NAME)" >> $GITHUB_ENV
-        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*TARGET_.*_(.*)_DEVICE_.*=y/\1/' > TARGET_NAME
-        [ -s TARGET_NAME ] && echo "TARGET_NAME=$(cat TARGET_NAME)" >> $GITHUB_ENV
         echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
-        echo "status=success" >> $GITHUB_OUTPUT
 
     - name: 查看磁盘使用情况
       if: (!cancelled())
