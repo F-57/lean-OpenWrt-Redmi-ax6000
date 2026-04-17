@@ -10,14 +10,20 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# 1. 替换 LAN 口默认 IP (192.168.1.1 -> 10.0.0.1)
+# 替换 LAN 口默认 IP (192.168.1.1 -> 10.0.0.1)
 sed -i 's/192.168.1.1/10.0.0.1/g' package/base-files/files/bin/config_generate
 
-# 2. 替换其他接口的递增网段 (192.168.$((...)) -> 10.0.$((...)))
+# 替换其他接口的递增网段 (192.168.$((...)) -> 10.0.$((...)))
 sed -i 's/192.168.\$((addr_offset++))/10.0.\$((addr_offset++))/g' package/base-files/files/bin/config_generate
 
-# 512布局
-sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' target/linux/mediatek/dts/mt7986a-xiaomi-redmi-router-ax6000.dts
+# 自动查找 DTS 文件（防止路径变动）
+DTS_FILE=$(find target/linux/mediatek/ -name "mt7986a-xiaomi-redmi-router-ax6000.dts")
+
+# 修改 Flash 分区为 512MB 布局 (UBI 分区扩容)
+sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' $DTS_FILE
+
+# 修改内存定义为 1GB 
+sed -i 's/reg = <0 0x40000000 0 0x20000000>/reg = <0 0x40000000 0 0x40000000>/' $DTS_FILE
 
 # TTYD 免登录
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
