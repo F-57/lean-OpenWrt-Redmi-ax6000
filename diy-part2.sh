@@ -23,6 +23,9 @@ sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' $DTS_FILE
 # 修改内存定义为 1GB 
 sed -i 's/reg = <0 0x40000000 0 0x20000000>/reg = <0 0x40000000 0 0x40000000>/' $DTS_FILE
 
+# 确保高并发参数写入系统配置
+sed -i '/customized system write here/a echo "net.netfilter.nf_conntrack_max=65535" >> /etc/sysctl.conf' package/base-files/files/etc/sysctl.conf
+
 # TTYD 免登录
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
