@@ -122,7 +122,7 @@ jobs:
       uses: ncipollo/release-action@main
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
       with:
-        tag: v${{ env.FILE_DATE }}-ax6000
+        tag: ${{ env.FILE_DATE }}-ax6000
         artifacts: ${{ env.FIRMWARE }}/*
         allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}
