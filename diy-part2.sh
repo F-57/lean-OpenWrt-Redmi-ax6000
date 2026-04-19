@@ -47,10 +47,7 @@ function git_sparse_clone() {
 
 # 下载软件包
 git_sparse_clone main https://github.com/F-57/luci-app-adguardhome luci-app-adguardhome
-git_sparse_clone main https://github.com/sbwml/luci-app-airconnect airconnect
-git_sparse_clone main https://github.com/sbwml/luci-app-airconnect luci-app-airconnect
-git clone --depth=1 https://github.com/sirpdboy/luci-theme-kucat package/luci-theme-kucat
-git clone --depth=1 https://github.com/sirpdboy/luci-app-kucat-config package/luci-app-kucat-config
+git_sparse_clone main https://github.com/sbwml/luci-app-airconnect airconnect luci-app-airconnect
 
 # 更改菜单名字 定义一个快捷函数：参数1是文件路径，参数2是原始文字，参数3是目标文字
 change_name() {
@@ -66,12 +63,13 @@ change_name() {
     fi
 }
 
-change_name "package/luci-app-kucat-config/po/zh_Hans/kucat-config.po" "KuCat Config" "主题设置"
+change_name "feeds/luci/modules/luci-base/po/zh_Hans/base.po" "Processes" "系统进程"
+change_name "feeds/luci/applications/luci-app-upnp/po/zh_Hans/upnp.po" "UPnP IGD & PCP" "端口映射"
+change_name "feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po" "TurboACC" "网络加速"
 change_name "feeds/luci/applications/luci-app-mosdns/po/zh_Hans/mosdns.po" "MosDNS" "转发分流"
 change_name "feeds/luci/applications/luci-app-nikki/po/zh_Hans/nikki.po" "Nikki" "科学上网"
-change_name "feeds/luci/applications/luci-app-upnp/po/zh_Hans/upnp.po" "UPnP" "端口转发"
 change_name "feeds/luci/applications/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky" "大吉大利"
-change_name "feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po" "TurboACC" "网络加速"
+
 
 # 更改 Argon 主题背景
 #cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
