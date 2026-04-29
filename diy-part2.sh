@@ -34,6 +34,7 @@ sed -i "s/192\.168\.[0-9]*\.[0-9]*/10.0.0.1/g" feeds/luci/applications/luci-app-
 
 # 删除预制软件
 rm -rf feeds/luci/applications/luci-app-adguardhome
+rm -rf feeds/luci/applications/luci-app-turboacc
 
 # Git稀疏克隆，只克隆指定目录到本地
 function git_sparse_clone() {
@@ -46,7 +47,7 @@ function git_sparse_clone() {
 }
 
 # 下载软件包
-git_sparse_clone main https://github.com/F-57/luci-app-adguardhome luci-app-adguardhome airconnect luci-app-airconnect
+git_sparse_clone main https://github.com/F-57/luci-app-adguardhome luci-app-adguardhome airconnect luci-app-airconnect luci-app-turboacc
 
 # 更改菜单名字 定义一个快捷函数：参数1是文件路径，参数2是原始文字，参数3是目标文字
 change_name() {
