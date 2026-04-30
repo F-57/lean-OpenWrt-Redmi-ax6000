@@ -49,6 +49,9 @@ function git_sparse_clone() {
 # 下载软件包
 git_sparse_clone main https://github.com/F-57/luci-app-adguardhome luci-app-adguardhome airconnect luci-app-airconnect luci-app-turboacc
 
+mv package/luci-app-turboacc feeds/luci/applications/luci-app-turboacc
+rm -rf package/luci-app-turboacc
+
 # 更改菜单名字 定义一个快捷函数：参数1是文件路径，参数2是原始文字，参数3是目标文字
 change_name() {
     local file=$1
