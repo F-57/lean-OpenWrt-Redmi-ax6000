@@ -78,15 +78,15 @@ jobs:
             find "$DIR" -type f -exec touch {} +
           done
           mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
-          echo "toolchain skipped done!"
+          echo "已成功跳过工具链!"
         else
-          echo "caches missed!"
+          echo "缓存丢失!"
         fi
 
         # 清理旧缓存（需要 GITHUB_TOKEN 权限）
         if [ "${{ steps.check-cache.outputs.cache-hit }}" != 'true' ]; then
           gh cache list --key "${{ env.TARGET }}-${{ env.REPO_BRANCH }}" | cut -f 1 | xargs -r -n 1 gh cache delete || true
-          echo "old caches cleanup done!"
+          echo "旧缓存清理完毕!"
         fi
 
     - name: 自定义 feeds & DIY_P1_SH
