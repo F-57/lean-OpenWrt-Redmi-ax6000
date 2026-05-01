@@ -50,6 +50,44 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /mnt/workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
+    - name: Check Scripts
+      run: |
+        find ./ -maxdepth 3 -type f -iregex ".*\(txt\|sh\)$" -exec dos2unix {} \; -exec chmod +x {} \;
+
+    - name: Check Caches
+      id: check-cache
+      if: env.WRT_TEST != 'true'
+      uses: actions/cache@main
+      with:
+        # 注意：你需要确保 env 中定义了这些变量，或者将 key 修改为固定值
+        key: ${{ env.TARGET }}-${{ env.REPO_BRANCH }}-${{ hashFiles('.config') }}
+        restore-keys: |
+          ${{ env.TARGET }}-${{ env.REPO_BRANCH }}-
+        path: |
+          ./openwrt/.ccache
+          ./openwrt/staging_dir/host*
+          ./openwrt/staging_dir/tool*
+
+    - name: Update Caches
+      if: env.WRT_TEST != 'true' && !cancelled()
+      run: |
+      
+        if [ -d "./openwrt/staging_dir" ]; then
+          find "./openwrt/staging_dir" -type d -name "stamp" -not -path "*target*" | while read -r DIR; do
+            find "$DIR" -type f -exec touch {} +
+          done
+          mkdir -p ./openwrt/tmp && echo "1" > ./openwrt/tmp/.build
+          echo "toolchain skipped done!"
+        else
+          echo "caches missed!"
+        fi
+
+        # 清理旧缓存（需要 GITHUB_TOKEN 权限）
+        if [ "${{ steps.check-cache.outputs.cache-hit }}" != 'true' ]; then
+          gh cache list --key "${{ env.TARGET }}-${{ env.REPO_BRANCH }}" | cut -f 1 | xargs -r -n 1 gh cache delete || true
+          echo "old caches cleanup done!"
+        fi
+
     - name: 自定义 feeds & DIY_P1_SH
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
