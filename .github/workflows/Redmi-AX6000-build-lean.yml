@@ -20,6 +20,7 @@ env:
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
   TARGET: mt7986
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
 jobs:
   cleanup:
