@@ -75,6 +75,7 @@ change_name "feeds/luci/applications/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky"
 
 # 集成软件 预置编译选项 (写入 .config)
 cat >> .config <<EOF
+CONFIG_PACKAGE_luci-theme-design=y
 CONFIG_PACKAGE_luci-app-nikki=y
 CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
