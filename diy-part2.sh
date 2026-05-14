@@ -79,10 +79,10 @@ change_name() {
 change_name "feeds/luci/modules/luci-base/po/zh_Hans/base.po" "Processes" "系统进程"
 change_name "feeds/luci/applications/luci-app-upnp/po/zh_Hans/upnp.po" "UPnP IGD & PCP" "端口映射"
 change_name "feeds/luci/applications/luci-app-turboacc/po/zh_Hans/turboacc.po" "TurboACC" "网络加速"
-change_name "feeds/luci/applications/luci-app-mosdns/po/zh_Hans/mosdns.po" "MosDNS" "分流助手"
-change_name "feeds/luci/applications/luci-app-nikki/po/zh_Hans/nikki.po" "Nikki" "科学上网"
-change_name "feeds/luci/applications/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky" "全能工具"
-
+change_name "feeds/luci/applications/luci-app-mosdns/po/zh_Hans/mosdns.po" "MosDNS" "域名分流"
+change_name "feeds/luci/applications/luci-app-openclash/po/zh-cn/openclash.zh-cn.po" "OpenClash" "科学上网"
+change_name "feeds/luci/applications/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky" "网络工具"
+change_name "feeds/luci/applications/luci-app-cloudflared/po/zh_Hans/cloudflared.po" "Cloudflare Zero Trust Tunnel" "全球隧道"
 
 # 更改 Argon 主题背景
 #cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
@@ -90,9 +90,10 @@ change_name "feeds/luci/applications/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky"
 # 集成软件 预置编译选项 (写入 .config)
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-theme-design=y
-CONFIG_PACKAGE_luci-app-nikki=n
-CONFIG_PACKAGE_luci-app-mosdns=n
+CONFIG_PACKAGE_luci-app-openclash=y
+CONFIG_PACKAGE_luci-app-mosdns=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
-CONFIG_PACKAGE_luci-app-lucky=n
+CONFIG_PACKAGE_luci-app-lucky=y
 CONFIG_PACKAGE_luci-app-airconnect=y
+CONFIG_PACKAGE_luci-app-cloudflared=y
 EOF
