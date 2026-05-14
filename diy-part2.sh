@@ -10,17 +10,19 @@
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 
-# 替换 LAN 口默认 IP (192.168.1.1 -> 10.0.0.1)
-sed -i 's/192.168.1.1/10.0.0.1/g' package/base-files/files/bin/config_generate
+# IP 配置
+CFG_FILE="./package/base-files/files/bin/config_generate"
+sed -i 's/192.168.1.1/10.0.0.1/g' $CFG_FILE
+sed -i 's/192.168.\$((addr_offset++))/10.0.\$((addr_offset++))/g' $CFG_FILE
 
-# 替换其他接口的递增网段 (192.168.$((...)) -> 10.0.$((...)))
-sed -i 's/192.168.\$((addr_offset++))/10.0.\$((addr_offset++))/g' package/base-files/files/bin/config_generate
+# WIFI 配置
+WIFI_FILE="./package/kernel/mac80211/files/lib/wifi/mac80211.sh"
+sed -i 's/country="US"/country="CN"/g' $WIFI_FILE
+sed -i 's/ssid="LEDE"/ssid="Ax6000"/g' $WIFI_FILE
 
-# 自动查找 DTS 文件（防止路径变动）
+# 修改分区为512MB 内存1GB
 DTS_FILE=$(find target/linux/mediatek/ -name "mt7986a-xiaomi-redmi-router-ax6000.dts")
-# 修改 Flash 分区为 512MB 布局 (UBI 分区扩容)
 sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' $DTS_FILE
-# 修改内存定义为 1GB 
 sed -i 's/reg = <0 0x40000000 0 0x20000000>/reg = <0 0x40000000 0 0x40000000>/' $DTS_FILE
 
 # 修正：直接向配置文件追加正确的 键=值 格式，并匹配 1GB 内存的性能
