@@ -20,6 +20,9 @@ WIFI_FILE="./package/kernel/mac80211/files/lib/wifi/mac80211.sh"
 sed -i 's/country="US"/country="CN"/g' $WIFI_FILE
 sed -i 's/ssid="LEDE"/ssid="Ax6000"/g' $WIFI_FILE
 
+# 默认密码
+#LEAN_FILE="./package/lean/default-settings/files/zzz-default-settings"
+
 # 修改分区为512MB 内存1GB
 DTS_FILE=$(find target/linux/mediatek/ -name "mt7986a-xiaomi-redmi-router-ax6000.dts")
 sed -i 's/reg = <0x600000 0x6e00000>/reg = <0x600000 0x1ea00000>/' $DTS_FILE
