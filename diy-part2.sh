@@ -84,6 +84,13 @@ change_name "feeds/luci/applications/luci-app-openclash/po/zh-cn/openclash.zh-cn
 change_name "feeds/luci/applications/luci-app-lucky/po/zh_Hans/lucky.po" "Lucky" "网络工具"
 change_name "feeds/luci/applications/luci-app-cloudflared/po/zh_Hans/cloudflared.po" "Cloudflare Zero Trust Tunnel" "全球隧道"
 
+# 移动 Cloudflare 菜单从 VPN 到 Services
+CF_MENU="feeds/luci/applications/luci-app-cloudflared/root/usr/share/luci/menu.d/luci-app-cloudflared.json"
+if [ -f "$CF_MENU" ]; then
+    sed -i 's/admin\/vpn\/cloudflared/admin\/services\/cloudflared/g' "$CF_MENU"
+    echo "已将 Cloudflared 菜单移动至服务菜单下"
+fi
+
 # 更改 Argon 主题背景
 #cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
 
