@@ -38,6 +38,14 @@ sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.
 # 修改upnp服务地址
 sed -i "s/192\.168\.[0-9]*\.[0-9]*/10.0.0.1/g" feeds/luci/applications/luci-app-upnp/htdocs/luci-static/resources/view/upnp/upnp.js
 
+# 删除 TurboACC 前端界面中的“高性能博通”选项
+TURBOACC_JS="feeds/luci/applications/luci-app-turboacc/htdocs/luci-static/resources/view/turboacc.js"
+if [ -f "$TURBOACC_JS" ]; then
+    # 精准删除包含 'Boardcom Fullcone NAT1' 的行
+    sed -i "/Boardcom Fullcone NAT1/d" "$TURBOACC_JS"
+    echo "TurboACC: 已移除前端博通高性能选项"
+fi
+
 # 删除预制软件
 rm -rf feeds/luci/applications/luci-app-adguardhome
 
