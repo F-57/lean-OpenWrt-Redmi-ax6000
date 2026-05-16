@@ -61,7 +61,6 @@ function git_sparse_clone() {
 
 # 下载软件包
 git_sparse_clone main https://github.com/F-57/luci-app luci-app-adguardhome airconnect luci-app-airconnect
-git_sparse_clone main https://github.com/timsaya/luci-app-bandix luci-app-bandix
 
 # 更改菜单名字 定义一个快捷函数：参数1是文件路径，参数2是原始文字，参数3是目标文字
 change_name() {
@@ -104,5 +103,4 @@ CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_luci-app-lucky=y
 CONFIG_PACKAGE_luci-app-airconnect=y
 CONFIG_PACKAGE_luci-app-cloudflared=y
-CONFIG_PACKAGE_luci-app-bandix=y
 EOF
