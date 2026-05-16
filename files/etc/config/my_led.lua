@@ -84,8 +84,6 @@ function change_color()
 
         os.execute("echo "..status_R.." "..status_G.." "..status_B.." > /sys/class/leds/rgb:status/multi_intensity")
         os.execute("echo "..network_R.." "..network_G.." "..network_B.." > /sys/class/leds/rgb:network/multi_intensity")
-        --os.execute("echo rgb:status "..status_R.." "..status_G.." "..status_B.." "..status_case.."")
-        --os.execute("echo rgb:network"..network_R.." "..network_G.." "..network_B.." "..network_case.."")
         timer:set(timer_set_ms)
 end
 
