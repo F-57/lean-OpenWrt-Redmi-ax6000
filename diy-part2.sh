@@ -105,8 +105,6 @@ else
 fi
 sed -i '/exit 0/i \/etc/config/my_led.sh > /tmp/my_led.log 2>&1 &' ./files/etc/rc.local
 chmod +x ./files/etc/rc.local
-# 强行勾选核心补丁，支持 0.25 秒的小数延时
-echo "CONFIG_PACKAGE_coreutils-sleep=y" >> .config
 
 # 集成软件 预置编译选项 (写入 .config)
 cat >> .config <<EOF
