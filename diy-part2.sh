@@ -94,6 +94,19 @@ fi
 # 更改 Argon 主题背景
 #cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
 
+# LED RGB灯效
+sed -i 's/\r$//' ./files/etc/config/my_led.lua
+chmod +x ./files/etc/config/my_led.lua
+# 联动开机自启（往 rc.local 里面塞入常驻后台命令）
+mkdir -p ./files/etc/
+if [ -f "package/base-files/files/etc/rc.local" ]; then
+    cp package/base-files/files/etc/rc.local ./files/etc/rc.local
+else
+    echo -e "#!/bin/sh -e\n\nexit 0" > ./files/etc/rc.local
+fi
+sed -i '/exit 0/i \nohup /etc/config/my_led.lua > /tmp/my_led.log 2>&1 &' ./files/etc/rc.local
+chmod +x ./files/etc/rc.local
+
 # 集成软件 预置编译选项 (写入 .config)
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-theme-design=y
