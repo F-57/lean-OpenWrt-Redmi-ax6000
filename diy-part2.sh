@@ -95,15 +95,16 @@ fi
 #cp -f $GITHUB_WORKSPACE/images/bg1.jpg package/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg
 
 # LED RGB灯效
-sed -i 's/\r$//' ./files/etc/config/my_led.sh
-chmod +x ./files/etc/config/my_led.sh
+sed -i 's/\r$//' ./files/etc/config/my_led.lua
+chmod +x ./files/etc/config/my_led.lua
 mkdir -p ./files/etc/
 if [ -f "package/base-files/files/etc/rc.local" ]; then
     cp package/base-files/files/etc/rc.local ./files/etc/rc.local
 else
     echo -e "#!/bin/sh -e\n\nexit 0" > ./files/etc/rc.local
 fi
-sed -i '/exit 0/i \/etc/config/my_led.sh > /tmp/my_led.log 2>&1 &' ./files/etc/rc.local
+
+sed -i '/exit 0/i \/etc/config/my_led.lua > /tmp/my_led.log 2>&1 &' ./files/etc/rc.local
 chmod +x ./files/etc/rc.local
 
 # 集成软件 预置编译选项 (写入 .config)
