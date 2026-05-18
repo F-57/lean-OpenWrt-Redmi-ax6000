@@ -59,10 +59,10 @@ end
 -- 【导师配置】
 -- status 灯从纯绿(G)开始跑
 -- network 灯同样从绿(G)开始，但通过注入 120 个单位的相位差，强制让它“落后”
--- 120 大约是总行程（255）的一半，两个灯会呈现出完美的色彩前后追逐拉丝效果
+-- 51 大约是总行程（255）的5分子一，两个灯会呈现出完美的色彩前后追逐拉丝效果
 local leds = {
     status  = create_led("status", "G", nil),
-    network = create_led("network", "G", 120) 
+    network = create_led("network", "G", 51) 
 }
 
 -- 3. 防御性文件写入：具备错误捕获与自动重连
