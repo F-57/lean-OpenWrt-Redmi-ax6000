@@ -1,66 +1,125 @@
 #!/usr/bin/env lua
 
--- 既然当前系统只认识整数，我们直接休眠 1 秒
-local timer_set_ms = 1
+require "uloop"
+uloop.init()
 
--- 为了在休眠 1 秒时不卡顿，我们将步长调小，让每次变化的色彩跨度看起来自然（你可以根据需要调整）
-local status_R, status_G, status_B = 255, 255, 255
-local status_flag, status_case, status_one, status_interval = 0, "R", 0, 25
+-- 1. 性能参数：30ms 刷新率，步长为 3，极度丝滑
+local TIMER_INTERVAL_MS = 30
+local STEP_INTERVAL = 3
 
-local network_R, network_G, network_B = 255, 255, 255
-local network_flag, network_case, network_one, network_interval = 0, "G", 0, 25
+-- 2. 状态机与流光相位差初始化
+local function create_led(name, initial_channel, phase_offset)
+    local path = string.format("/sys/class/leds/rgb:%s/multi_intensity", name)
+    
+    -- 色彩环状态转移链：绿(G) -> 红(R) -> 蓝(B) -> 绿(G)
+    local next_channel = { G = "R", R = "B", B = "G" }
+    
+    -- 初始化基础颜色：当前主色满（255），其余全灭
+    local colors = { G = 0, R = 0, B = 0 }
+    colors[initial_channel] = 255
+    local current_channel = initial_channel
 
-local function change_value(value, flag, one, interval)
-    if flag == 1 then
-        value = value + interval
-        if value >= 255 then value = 255; flag = 0; one = 1 end
-    else
-        value = value - interval
-        if value <= 0 then value = 0; flag = 1 end
+    -- 【核心重构】如果有相位差，计算出落后的色彩状态
+    if phase_offset and phase_offset > 0 then
+        local steps = phase_offset
+        -- 模拟步长演进，让当前灯的颜色“往回退” steps 个单位
+        while steps > 0 do
+            local nxt = next_channel[current_channel]
+            -- 如果下一个颜色不是0，说明正在从主色向下一个颜色过渡
+            -- 那么“后退”就意味着降低下一个颜色，升高当前主色
+            if colors[nxt] > 0 then
+                local diff = math.min(steps, colors[nxt])
+                colors[nxt] = colors[nxt] - diff
+                colors[current_channel] = colors[current_channel] + diff
+                steps = steps - diff
+            else
+                -- 如果下一个颜色是0，说明已经退到边界，需要向“上一个通道”倒退
+                -- 找出谁的 next 是当前 channel（即倒退回上一个通道）
+                local prev_channel
+                for k, v in pairs(next_channel) do
+                    if v == current_channel then prev_channel = k; break end
+                end
+                current_channel = prev_channel
+                colors[current_channel] = 0
+                colors[next_channel[current_channel]] = 255
+            end
+        end
     end
-    return value, flag, one
+
+    return {
+        name = name,
+        path = path,
+        fh = nil,
+        colors = colors,
+        current_channel = current_channel,
+        next_channel = next_channel
+    }
 end
 
-local f_status = io.open("/sys/class/leds/rgb:status/multi_intensity", "w")
-local f_network = io.open("/sys/class/leds/rgb:network/multi_intensity", "w")
+-- 【导师配置】
+-- status 灯从纯绿(G)开始跑
+-- network 灯同样从绿(G)开始，但通过注入 120 个单位的相位差，强制让它“落后”
+-- 120 大约是总行程（255）的一半，两个灯会呈现出完美的色彩前后追逐拉丝效果
+local leds = {
+    status  = create_led("status", "G", nil),
+    network = create_led("network", "G", 120) 
+}
 
-while true do
-    if status_case == "R" then
-        status_R, status_flag, status_one = change_value(status_R, status_flag, status_one, status_interval)
-        if status_one == 1 then status_one = 0; status_case = "G" end
-    elseif status_case == "G" then
-        status_G, status_flag, status_one = change_value(status_G, status_flag, status_one, status_interval)
-        if status_one == 1 then status_one = 0; status_case = "B" end
-    else
-        status_B, status_flag, status_one = change_value(status_B, status_flag, status_one, status_interval)
-        if status_one == 1 then status_one = 0; status_case = "R" end
+-- 3. 防御性文件写入：具备错误捕获与自动重连
+local function safe_write_led(led)
+    if not led.fh then
+        led.fh = io.open(led.path, "w")
+        if not led.fh then return false end
     end
 
-    if network_case == "R" then
-        network_R, network_flag, network_one = change_value(network_R, network_flag, network_one, network_interval)
-        if network_one == 1 then network_one = 0; network_case = "G" end
-    elseif network_case == "G" then
-        network_G, network_flag, network_one = change_value(network_G, network_flag, network_one, network_interval)
-        if network_one == 1 then network_one = 0; network_case = "B" end
-    else
-        network_B, network_flag, network_one = change_value(network_B, network_flag, network_one, network_interval)
-        if network_one == 1 then network_one = 0; network_case = "R" end
+    local _, err = led.fh:seek("set", 0)
+    if err then
+        led.fh:close()
+        led.fh = nil
+        return false
     end
 
-    -- 物理修正红绿反转
-    if f_status then 
-        f_status:write(string.format("%d %d %d\n", status_G, status_R, status_B))
-        f_status:flush() 
+    -- 严格对应红米硬件物理线序: G R B
+    local payload = string.format("%d %d %d\n", led.colors.G, led.colors.R, led.colors.B)
+    local success, write_err = led.fh:write(payload)
+    
+    if not success then
+        led.fh:close()
+        led.fh = nil
+        return false
     end
 
-    if f_network then 
-        f_network:write(string.format("%d %d %d\n", network_G, network_R, network_B))
-        f_network:flush() 
-    end
-
-    -- 用当前系统绝对支持的整数 1 秒进行阻塞，彻底拯救 CPU
-    os.execute("sleep " .. timer_set_ms)
+    led.fh:flush()
+    return true
 end
 
-if f_status then f_status:close() end
-if f_network then f_network:close() end
+-- 4. 无缝炫彩渐变算法
+local function update_led_rainbow(led)
+    local cur = led.current_channel
+    local nxt = led.next_channel[cur]
+    
+    led.colors[cur] = led.colors[cur] - STEP_INTERVAL
+    led.colors[nxt] = led.colors[nxt] + STEP_INTERVAL
+    
+    -- 边界校准：完成单个通道的交接
+    if led.colors[nxt] >= 255 then
+        led.colors[cur] = 0
+        led.colors[nxt] = 255
+        led.current_channel = nxt
+    end
+end
+
+-- 5. 异步定时器
+local timer
+local function timer_cb()
+    for _, led in pairs(leds) do
+        update_led_rainbow(led)
+        safe_write_led(led)
+    end
+    timer:set(TIMER_INTERVAL_MS)
+end
+
+timer = uloop.timer(timer_cb)
+timer:set(TIMER_INTERVAL_MS)
+
+uloop.run()
